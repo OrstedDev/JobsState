@@ -53,6 +53,7 @@ const JobsIndex = () => {
   );
 
   const [minSalary, setMinSalary] = useState("");
+  const [maxSalary, setMaxSalary] = useState("");
   const [onlyToday, setOnlyToday] = useState(false);
   const [postulate, setPostulate] = useState(false);
 
@@ -129,6 +130,7 @@ const JobsIndex = () => {
   const filterJobOffers = (
     jobs: IJobs.NsJobOffer[],
     minSalary?: string,
+    maxSalary?: string,
     onlyToday?: boolean
   ): IJobs.NsJobOffer[] => {
     return jobs
@@ -140,8 +142,12 @@ const JobsIndex = () => {
             .replace(",", ""),
           10
         );
-        const min = minSalary !== "" ? parseFloat(minSalary ?? "0") : 0;
-        return salary >= min;
+        const min = minSalary !== "" ? parseInt(minSalary ?? "0", 10) : 0;
+        const max =
+          maxSalary !== "" ? parseInt(maxSalary ?? "99999", 10) : 99999;
+
+        console.log(min, max);
+        return salary >= min && salary <= max;
       })
       .filter((job) => {
         return onlyToday
@@ -155,10 +161,15 @@ const JobsIndex = () => {
 
   useEffect(() => {
     if (items.length > 0) {
-      const updatedJobs = filterJobOffers(items, minSalary, onlyToday);
+      const updatedJobs = filterJobOffers(
+        items,
+        minSalary,
+        maxSalary,
+        onlyToday
+      );
       LoadInDataTable(updatedJobs);
     }
-  }, [items, minSalary, onlyToday, postulate]);
+  }, [items, minSalary, maxSalary, onlyToday, postulate]);
 
   //=======================================================================
   // CARGAR DATA TABLE INICIAL
@@ -263,6 +274,14 @@ const JobsIndex = () => {
             type="number"
             value={minSalary}
             onChange={(e) => setMinSalary(e.target.value)}
+          />
+          <TextField
+            label="Salario Máximo"
+            variant="outlined"
+            size="small"
+            type="number"
+            value={maxSalary}
+            onChange={(e) => setMaxSalary(e.target.value)}
           />
           <Button
             variant="contained"

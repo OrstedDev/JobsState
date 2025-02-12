@@ -95,36 +95,43 @@ export default function GenDataTable(Props: any) {
   };
 
   useEffect(() => {
-    setDataTableLocal(Props.data);
+    setDataTableLocal(filtered);
   }, [Props.data]);
 
   useEffect(() => {
     setLote(Props?.rows ?? 10);
   }, [Props?.rows]);
 
+  const filtered = Props.data.filter(function (element: any) {
+    let CopyObjetc = Object.assign({}, element);
+    Props.columns.forEach((element: any) => {
+      if (typeof CopyObjetc[element?.idName] === "object") {
+        CopyObjetc[element?.idName] = "";
+      }
+    });
+    
+    let MyLinealElement = JSON.stringify(CopyObjetc)
+      .replaceAll(/['"]+/g, "")
+      .replaceAll(":", " ")
+      .replaceAll("{", ",")
+      .replaceAll("}", "");
+
+    Props.columns.forEach((element: any) => {
+      MyLinealElement = MyLinealElement.replaceAll("," + element?.idName, "");
+    });
+
+    if (MyLinealElement.match(new RegExp(`${Buscador}.*`, "i"))) {
+      return element;
+    }
+  });
+
+  useEffect(() => {
+    setDataTableLocal(filtered);
+  }, [Buscador]);
+
   const BuscarElemento = (e: any) => {
     e.preventDefault();
     setBuscador(e.target.value);
-    const filtered = Props.data.filter(function (element: any) {
-      let CopyObjetc = Object.assign({}, element);
-      Props.columns.forEach((element: any) => {
-        if (typeof CopyObjetc[element?.idName] === "object") {
-          CopyObjetc[element?.idName] = "";
-        }
-      });
-      let MyLinealElement = JSON.stringify(CopyObjetc)
-        .replaceAll(/['"]+/g, "")
-        .replaceAll(":", " ")
-        .replaceAll("{", ",")
-        .replaceAll("}", "");
-      Props.columns.forEach((element: any) => {
-        MyLinealElement = MyLinealElement.replaceAll("," + element?.idName, "");
-      });
-      if (MyLinealElement.match(new RegExp(`${e.target.value}.*`, "i"))) {
-        return element;
-      }
-    });
-    setDataTableLocal(filtered);
   };
 
   const ChangePage = (e: any) => {
