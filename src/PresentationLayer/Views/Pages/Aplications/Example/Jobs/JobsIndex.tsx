@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { parse, format, parseISO, isToday, isAfter } from "date-fns";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { TextField } from "@mui/material";
+import { TextField, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
@@ -14,6 +14,15 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import { InputLabel, FormControl } from "@mui/material";
+
+import GenDataTable from "../../../../../GenericComponents/DataTable/GenDataTable";
+import JobsUseCase from "../../../../../../DataLayer/UseCases/Aplications/Example/Jobs/JobsUseCase";
+import parseJobOffers from "./parseJobOffers";
+import { IJobs } from "../../../../../../DomainLayer/Interfaces/Aplication/Example/IJobs";
+import AlertComponent from "../../../../../GenericComponents/Alerts/AlertComponent";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,14 +33,6 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-import GenDataTable from "../../../../../GenericComponents/DataTable/GenDataTable";
-import { JobOfferEntity } from "../../../../../../DomainLayer/Models/Aplication/Modules/Example/JobsEntity";
-import JobsUseCase from "../../../../../../DataLayer/UseCases/Aplications/Example/Jobs/JobsUseCase";
-import parseJobOffers from "./parseJobOffers";
-import { IJobs } from "../../../../../../DomainLayer/Interfaces/Aplication/Example/IJobs";
-import AlertComponent from "../../../../../GenericComponents/Alerts/AlertComponent";
-import { date } from "yup";
-
 type TablaJobsEntity = {
   Actions: any;
   company?: string;
@@ -39,7 +40,7 @@ type TablaJobsEntity = {
   salary?: string;
   deadline?: string;
   link?: string;
-  vigent: string;
+  state: any;
 };
 
 const JobsIndex = () => {
@@ -51,9 +52,59 @@ const JobsIndex = () => {
   );
 
   const [minSalary, setMinSalary] = useState("");
-  const [maxSalary, setMaxSalary] = useState("");
-  const [filterDate, setFilterDate] = useState("");
   const [onlyToday, setOnlyToday] = useState(false);
+  const [postulate, setPostulate] = useState(false);
+
+  //=======================================================================
+  // DELETE
+  //=======================================================================
+
+  const deleteItem = async (_Id: string) => {
+    setItems((prevItems) => prevItems.filter((item) => item._Id !== _Id));
+
+    const item = await new JobsUseCase().deleteJob(_Id);
+    if (!item) {
+      AlertComponent("error", "Ocurrio un error al guardar los cambios.");
+    }
+  };
+
+  const deleteExpiredJobs = async () => {
+    const item = await new JobsUseCase().deleteExpiredJobs();
+    if (!item) {
+      AlertComponent("error", "Ocurrio un error al guardar los cambios.");
+    }
+  };
+
+  //=======================================================================
+  // UPDATE
+  //=======================================================================
+
+  const updateItemAttribute = async (
+    _Id: string,
+    key: keyof IJobs.NsJobOffer,
+    e: any
+  ) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item._Id === _Id ? { ...item, [key]: e.target.value } : item
+      )
+    );
+
+    const item = await new JobsUseCase().updateJob(_Id, {
+      state: e.target.value,
+    });
+    if (!item) {
+      AlertComponent("error", "Ocurrio un error al guardar los cambios.");
+    }
+  };
+
+  useEffect(() => {
+    LoadInDataTable(items);
+  }, [items]);
+
+  //=======================================================================
+  // SAVE
+  //=======================================================================
 
   const SaveJobs = async () => {
     setOpen(false);
@@ -70,20 +121,41 @@ const JobsIndex = () => {
     }
   };
 
-  const filteredJobs = items
-    .filter((job) => isAfter(parseISO(job.deadline || ""), new Date())) // Vigentes
-    .filter((job) => {
-      const salary = parseInt(job.salary || "0", 10);
-      const min = minSalary ? parseInt(minSalary, 10) : 0;
-      const max = maxSalary ? parseInt(maxSalary, 10) : Number.MAX_VALUE;
-      return salary >= min && salary <= max;
-    })
-    .filter((job) => {
-      return filterDate ? job.deadline === filterDate : true;
-    })
-    .filter((job) => {
-      return onlyToday ? isToday(parseISO(job.deadline || "")) : true;
-    });
+  //=======================================================================
+  // FILTER
+  //=======================================================================
+
+  const filterJobOffers = (
+    jobs: IJobs.NsJobOffer[],
+    minSalary?: string,
+    onlyToday?: boolean
+  ): IJobs.NsJobOffer[] => {
+    return jobs
+      .filter((job) => {
+        const salary = parseInt(
+          (job?.salary ?? "0")
+            .replace(/[^\d.]/g, "")
+            .replace(".", "")
+            .replace(",", ""),
+          10
+        );
+        const min = minSalary !== "" ? parseFloat(minSalary ?? "0") : 0;
+        return salary >= min;
+      })
+      .filter((job) => {
+        return onlyToday ? isToday(parseISO(job.deadline?.trim() || "")) : true;
+      })
+      .filter((job) => {
+        return postulate ? job.state === 2 : true;
+      });
+  };
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const updatedJobs = filterJobOffers(items, minSalary, onlyToday);
+      LoadInDataTable(updatedJobs);
+    }
+  }, [items, minSalary, onlyToday, postulate]);
 
   //=======================================================================
   // CARGAR DATA TABLE INICIAL
@@ -91,43 +163,59 @@ const JobsIndex = () => {
 
   const LoadInDataTable = async (items: Array<IJobs.NsJobOffer>) => {
     const rows: Array<TablaJobsEntity> = [];
-    items?.forEach((items: IJobs.NsJobOffer) => {
+    items?.forEach((Y: IJobs.NsJobOffer) => {
       rows.push({
         Actions: (
-          <>
-            <div style={{ display: "flex" }}>
-              <div
-                style={{
-                  color: "white",
-                  background: "red",
-                  borderRadius: "5px",
-                  padding: "3px",
-                  cursor: "pointer",
-                  marginRight: "3px",
-                }}
-                // onClick={() => ButtonDeleteCryptoItem(items)}
-              >
-                <DeleteIcon />
-              </div>
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                color: "white",
+                background: "red",
+                borderRadius: "5px",
+                padding: "3px",
+                cursor: "pointer",
+                marginRight: "3px",
+              }}
+              onClick={() => deleteItem(Y._Id ?? "")}
+            >
+              <DeleteIcon />
             </div>
-          </>
+          </div>
         ),
-        company: items?.company,
+        company: Y?.company,
         description:
-          items?.location +
+          Y?.location +
           ": " +
-          items?.positions +
+          Y?.positions +
           " \n " +
-          items?.contractType +
+          Y?.contractType +
           " \n\n " +
-          items?.education,
-        salary: items?.salary,
+          Y?.education,
+        salary: Y?.salary,
         deadline: format(
-          parse(items?.deadline ?? "", "dd/MM/yyyy", new Date()),
+          parse(Y?.deadline ?? "", "dd/MM/yyyy", new Date()),
           "yyyy/MM/dd"
         ),
-        link: items?.link,
-        vigent: items.vigent ? "SI" : "NO",
+        link: Y?.link,
+        state: (
+          <FormControl sx={{ width: "100px" }} variant="standard">
+            <InputLabel htmlFor="Gender">Estado</InputLabel>
+            <Select
+              fullWidth
+              id="Gender"
+              name="Gender"
+              value={Y.state}
+              onChange={(e) => {
+                updateItemAttribute(Y._Id ?? "", "state", e);
+              }}
+            >
+              <MenuItem value={0}>Disable</MenuItem>
+              <MenuItem value={1}>Enable</MenuItem>
+              <MenuItem value={2}>Postulated</MenuItem>
+              <MenuItem value={3}>Closed</MenuItem>
+            </Select>
+          </FormControl>
+        ),
       });
     });
 
@@ -136,11 +224,9 @@ const JobsIndex = () => {
 
   const Load = async () => {
     try {
-      const items = await new JobsUseCase().Get();
-      if (items?.length !== 0) {
-        setItems(items);
-        LoadInDataTable(items);
-      }
+      const jobs = await new JobsUseCase().Get();
+      setItems(jobs);
+      LoadInDataTable(jobs);
     } catch (error: any) {
       AlertComponent("error", error.message);
     }
@@ -152,16 +238,14 @@ const JobsIndex = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   LoadInDataTable(filteredJobs);
-  // }, [onlyToday, filterDate, maxSalary, minSalary]);
-
   return (
     <Box>
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Button
-          variant="outlined"
-          sx={{ mb: 2 }}
+          variant="contained"
+          color="inherit"
+          fullWidth
+          sx={{ mb: 3 }}
           onClick={() => {
             setOpen(true);
           }}
@@ -169,7 +253,7 @@ const JobsIndex = () => {
           INPORT DATA
         </Button>
 
-        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
+        <Stack direction="row" spacing={1} alignItems="center">
           <TextField
             label="Salario Mínimo"
             variant="outlined"
@@ -178,69 +262,37 @@ const JobsIndex = () => {
             value={minSalary}
             onChange={(e) => setMinSalary(e.target.value)}
           />
-          <TextField
-            label="Salario Máximo"
-            variant="outlined"
-            size="small"
-            type="number"
-            value={maxSalary}
-            onChange={(e) => setMaxSalary(e.target.value)}
-          />
-          <TextField
-            label="Fecha límite"
-            type="date"
-            variant="outlined"
-            size="small"
-            InputLabelProps={{ shrink: true }}
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-          />
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => {
-              setOnlyToday(!onlyToday);
-            }}
+            onClick={() => setOnlyToday(!onlyToday)}
+            sx={{ height: "38px" }}
           >
-            {onlyToday ? "Ver Todos" : "Solo Hoy"}
+            {onlyToday ? "All" : "ONLY TODAY"}
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              setMinSalary("");
-              setMaxSalary("");
-              setFilterDate("");
-              setOnlyToday(false);
-              LoadInDataTable(items);
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => LoadInDataTable(filteredJobs)}
-          >
-            Aplicar
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => LoadInDataTable(filteredJobs)}
-          >
-            CLEAN PASADAS
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => LoadInDataTable(filteredJobs)}
-          >
-            VER POSTULADAS
-          </Button>
-        </div>
 
-        <TableCrypto dataRows={rowsDataTable} />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setPostulate(!postulate)}
+            sx={{ height: "38px" }}
+          >
+            {postulate ? "All" : "POSTULATED"}
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={async () => {
+              await deleteExpiredJobs();
+              await Load();
+            }}
+            sx={{ height: "38px" }}
+          >
+            CLEAN EXPIRED
+          </Button>
+        </Stack>
+
+        <TableJobs dataRows={rowsDataTable} />
 
         <Dialog
           fullScreen
@@ -300,7 +352,7 @@ const JobsIndex = () => {
   );
 };
 
-const TableCrypto = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
+const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
   const columns = [
     {
       name: (
@@ -314,6 +366,15 @@ const TableCrypto = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
         </div>
       ),
       width: "80px",
+    },
+    {
+      name: "ESTADO",
+      idName: "state",
+      selector: (row: TablaJobsEntity) => row?.state,
+      cell: (row: TablaJobsEntity) => (
+        <div style={{ margin: "auto", textAlign: "center" }}>{row?.state}</div>
+      ),
+      width: "110px",
     },
     {
       name: "FECHA",

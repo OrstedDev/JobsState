@@ -1,5 +1,6 @@
 export type JobOfferEntity = {
-  vigent: boolean;
+  _Id?: string;
+  state: number;
   company?: string;
   positions?: string;
   contractType?: string;

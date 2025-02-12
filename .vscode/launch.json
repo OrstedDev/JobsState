@@ -3,27 +3,29 @@
     "configurations": [
         {
             "name": "Start App",
-            "runtimeArgs": ["start"],
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
             "env": {
                 "BROWSER": "none"
             },
-            "request": "launch",
-            "runtimeExecutable": "npm",
-            "type": "node",
+            "console": "integratedTerminal"
         },
         {
             "type": "chrome",
             "request": "launch",
             "name": "Run Chrome",
-            "url": "http://localhost:5175/",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:5000/",
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true
         }
     ],
     "compounds": [
         {
-          "name": "Debug App",
-          "configurations": ["Start App", "Run Chrome"],
-          "stopAll": true
+            "name": "Debug App",
+            "configurations": ["Start App", "Run Chrome"],
+            "stopAll": true
         }
     ]
 }

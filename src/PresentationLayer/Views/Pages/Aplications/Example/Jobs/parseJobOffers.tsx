@@ -8,7 +8,7 @@ export default function parseJobOffers(text: string): JobOfferEntity[] {
     const lines = block.split("\n").map((line) => line.trim()); // Separar líneas y limpiar espacios
     const job: Partial<JobOfferEntity> = {};
 
-    job.vigent = true;
+    job.state = 1;
 
     lines.forEach((line) => {
       if (line.startsWith("🏢")) {
