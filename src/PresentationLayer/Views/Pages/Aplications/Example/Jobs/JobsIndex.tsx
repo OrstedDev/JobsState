@@ -374,6 +374,7 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
       cell: (row: TablaJobsEntity) => (
         <div style={{ margin: "auto", textAlign: "center" }}>{row?.state}</div>
       ),
+      sortable: true,
       width: "110px",
     },
     {
@@ -381,6 +382,7 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
       idName: "deadline",
       selector: (row: TablaJobsEntity) => row?.deadline,
       cell: (row: TablaJobsEntity) => <>{row?.deadline}</>,
+      sortable: true,
       width: "100px",
     },
     {
@@ -388,6 +390,7 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
       idName: "salary",
       selector: (row: TablaJobsEntity) => row?.salary,
       cell: (row: TablaJobsEntity) => <>{row?.salary}</>,
+      sortable: true,
       width: "100px",
     },
     {
