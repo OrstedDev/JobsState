@@ -17,6 +17,7 @@ import UserProfileIndex from "./Pages/Aplications/Internal/UserProfile/UserProfi
 //================================================================================================
 
 import SettingsIcon from "@mui/icons-material/Settings";
+import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 
 const styles = {
   icon: {
@@ -54,6 +55,7 @@ const Routers = new ListObject<{
   {
     Key: Crypt0.C1pt0("/example/my-jobs"),
     Value: <JobsIndex />,
+    Icon: <WorkHistoryIcon style={styles.icon} />,
   },
 
   //================================================================================
