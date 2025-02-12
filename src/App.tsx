@@ -10,12 +10,13 @@ import { ThemeProvider } from "@mui/material/styles";
 import { ToastContainer } from "react-toastify";
 import { darkTheme, lightTheme } from "./UITheme";
 import { useGlobalContext } from "./Global";
-import { AuthUseCase } from "./DataLayer/UseCases/Authorization/AuthUseCase";
+import { AuthUseCase } from "./DataLayer/UseCases/Aplications/Internal/Authorization/AuthUseCase";
 
 import AlertComponent from "./PresentationLayer/GenericComponents/Alerts/AlertComponent";
 import Main from "./PresentationLayer/Main";
-import InitUseCase from "./DataLayer/UseCases/Initialize/InitUseCase";
+import InitUseCase from "./DataLayer/UseCases/Aplications/Internal/Initialize/InitUseCase";
 import "react-toastify/dist/ReactToastify.css";
+import "cropperjs/dist/cropper.css";
 import "./App.css";
 
 function App() {

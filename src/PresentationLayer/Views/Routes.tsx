@@ -6,11 +6,11 @@ import ListObject from "../../UtilitiesLayer/Structures/ListObject";
 //================================================================================================
 
 import Error404 from "./Pages/Error/Error404";
-import ConfigurationIndex from "./Pages/Aplications/Configuration/ConfigurationIndex";
-import RestoreConfig from "./Pages/Aplications/Configuration/RestoreConfig";
-import JobParserComponent from "./Pages/Aplications/ResumeBuilder/ExperienceIndex";
+import ConfigurationIndex from "./Pages/Aplications/Internal/Configuration/ConfigurationIndex";
+import RestoreConfig from "./Pages/Aplications/Internal/Configuration/RestoreConfig";
+import JobsIndex from "./Pages/Aplications/Example/Jobs/JobsIndex";
 
-import UserProfileIndex from "./Pages/Aplications/UserProfile/UserProfileIndex";
+import UserProfileIndex from "./Pages/Aplications/Internal/UserProfile/UserProfileIndex";
 
 //================================================================================================
 // ICONS
@@ -36,7 +36,7 @@ const Routers = new ListObject<{
 }>([
   {
     Key: Crypt0.C1pt0("/"),
-    Value: <JobParserComponent />,
+    Value: <Error404 />,
   },
   {
     Key: Crypt0.C1pt0("/user-profile"),
@@ -52,8 +52,8 @@ const Routers = new ListObject<{
     Value: <RestoreConfig />,
   },
   {
-    Key: Crypt0.C1pt0("/resume-builder/experience"),
-    Value: <JobParserComponent />,
+    Key: Crypt0.C1pt0("/example/my-jobs"),
+    Value: <JobsIndex />,
   },
 
   //================================================================================

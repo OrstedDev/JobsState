@@ -20,9 +20,9 @@ import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
 import Routers from "../Routes";
-import { AplicationGetEntity } from "../../../DomainLayer/Models/Aplication/Modules/Configuration/AplicationEntity";
-import AplicationUseCase from "../../../DataLayer/UseCases/Configuration/AplicationUseCase";
-import { MenuUser } from "../../../DataLayer/UseCases/Initialize/InitData";
+import { AplicationGetEntity } from "../../../DomainLayer/Models/Aplication/Modules/Internal/Configuration/AplicationEntity";
+import AplicationUseCase from "../../../DataLayer/UseCases/Aplications/Internal/Configuration/AplicationUseCase";
+import { MenuUser } from "../../../DataLayer/UseCases/Aplications/Internal/Initialize/InitData";
 import { useGlobalContext } from "../../../Global";
 
 const FireNav = styled(List)({

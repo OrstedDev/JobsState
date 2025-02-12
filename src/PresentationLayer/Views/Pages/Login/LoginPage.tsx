@@ -24,9 +24,9 @@ import * as yup from "yup";
 import LoadingOverlay from "../../../GenericComponents/Loader/LoadingOverlay";
 import AlertComponent from "../../../GenericComponents/Alerts/AlertComponent";
 import { setFullscreen } from "../../DashBoard/RightNavDashBoard/FullPageButton";
-import { AuthUseCase } from "../../../../DataLayer/UseCases/Authorization/AuthUseCase";
+import { AuthUseCase } from "../../../../DataLayer/UseCases/Aplications/Internal/Authorization/AuthUseCase";
 import { useGlobalContext } from "../../../../Global";
-import { AuthUserEntity } from "../../../../DomainLayer/Models/Aplication/Modules/Authorization/AuthUserEntity";
+import { AuthUserEntity } from "../../../../DomainLayer/Models/Aplication/Modules/Internal/Authorization/AuthUserEntity";
 
 export const LoginPage = ({ handleSwitch }: any) => {
   const navigate = useNavigate();

@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useGlobalContext } from "../Global";
 import { Crypt0 } from "../UtilitiesLayer/Library/C1p70";
-import { RoutesUser } from "../DataLayer/UseCases/Initialize/InitData";
+import { RoutesUser } from "../DataLayer/UseCases/Aplications/Internal/Initialize/InitData";
 import ListObject from "../UtilitiesLayer/Structures/ListObject";
 import { FragmentStorage } from "../UtilitiesLayer/Library/FragmentStorage";
-import { GetGlobalCryptKeys } from "../DataLayer/UseCases/Initialize/InitData";
+import { GetGlobalCryptKeys } from "../DataLayer/UseCases/Aplications/Internal/Initialize/InitData";
 import ImageManager from "./GenericComponents/ImageManager/ImageManager";
 
 import Routers from "./Views/Routes";

@@ -14,7 +14,7 @@ import {
   OneValue,
 } from "../../../DomainLayer/Models/Fragment/FragmentEntity";
 
-import { GetGlobalCryptKeys } from "../../../DataLayer/UseCases/Initialize/InitData";
+import { GetGlobalCryptKeys } from "../../../DataLayer/UseCases/Aplications/Internal/Initialize/InitData";
 
 export const BodyBaseDashBoard = ({ children }: any) => {
   const imgManager = ImageManager.getInstance();

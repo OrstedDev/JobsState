@@ -1,5 +1,5 @@
-import { ConfigUseCase } from "../DataLayer/UseCases/Configuration/ConfigUseCase";
-import { ConfigEntity } from "../DomainLayer/Models/Aplication/Modules/Configuration/ConfigEntity";
+import { ConfigUseCase } from "../DataLayer/UseCases/Aplications/Internal/Configuration/ConfigUseCase";
+import { ConfigEntity } from "../DomainLayer/Models/Aplication/Modules/Internal/Configuration/ConfigEntity";
 
 export const TestAwait = async (): Promise<void> => {
   //console.clear();

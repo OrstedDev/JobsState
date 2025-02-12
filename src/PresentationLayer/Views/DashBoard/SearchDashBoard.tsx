@@ -5,7 +5,7 @@ import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
 import List from "@mui/material/List";
-import { RoutesUser } from "../../../DataLayer/UseCases/Initialize/InitData";
+import { RoutesUser } from "../../../DataLayer/UseCases/Aplications/Internal/Initialize/InitData";
 
 export const SearchDashBoard = () => {
   const [query, setQuery] = useState("");

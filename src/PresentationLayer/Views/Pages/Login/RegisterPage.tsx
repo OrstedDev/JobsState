@@ -23,8 +23,8 @@ import * as yup from "yup";
 
 import LoadingOverlay from "../../../GenericComponents/Loader/LoadingOverlay";
 import AlertComponent from "../../../GenericComponents/Alerts/AlertComponent";
-import { AuthUseCase } from "../../../../DataLayer/UseCases/Authorization/AuthUseCase";
-import { AuthUserEntity } from "../../../../DomainLayer/Models/Aplication/Modules/Authorization/AuthUserEntity";
+import { AuthUseCase } from "../../../../DataLayer/UseCases/Aplications/Internal/Authorization/AuthUseCase";
+import { AuthUserEntity } from "../../../../DomainLayer/Models/Aplication/Modules/Internal/Authorization/AuthUserEntity";
 
 export const RegisterPage = ({ handleSwitch }: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

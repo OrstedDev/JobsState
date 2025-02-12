@@ -3,11 +3,11 @@ import TreeObject from "../UtilitiesLayer/Structures/TreeObject";
 import ListObject from "../UtilitiesLayer/Structures/ListObject";
 import { v4 as uuidv4 } from "uuid";
 
-import AplicationUseCase from "../DataLayer/UseCases/Configuration/AplicationUseCase";
+import AplicationUseCase from "../DataLayer/UseCases/Aplications/Internal/Configuration/AplicationUseCase";
 
-import { ConfigUseCase } from "../DataLayer/UseCases/Configuration/ConfigUseCase";
+import { ConfigUseCase } from "../DataLayer/UseCases/Aplications/Internal/Configuration/ConfigUseCase";
 
-import { CryptoEntity } from "../DomainLayer/Models/Aplication/Modules/Configuration/CryptoEntity";
+import { CryptoEntity } from "../DomainLayer/Models/Aplication/Modules/Internal/Configuration/CryptoEntity";
 
 // type ObjetcEntity = {
 //   Key?: string;

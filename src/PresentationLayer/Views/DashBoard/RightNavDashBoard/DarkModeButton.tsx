@@ -7,7 +7,7 @@ import { useGlobalContext } from "../../../../Global";
 import { Crypt0 } from "../../../../UtilitiesLayer/Library/C1p70";
 import { OneValue } from "../../../../DomainLayer/Models/Fragment/FragmentEntity";
 import { FragmentStorage } from "../../../../UtilitiesLayer/Library/FragmentStorage";
-import UserUseCase from "../../../../DataLayer/UseCases/User/UserUseCase";
+import UserUseCase from "../../../../DataLayer/UseCases/Aplications/Internal/User/UserUseCase";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,

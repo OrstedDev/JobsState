@@ -15,7 +15,7 @@ import { FullscreenButton, setFullscreen } from "./FullPageButton";
 import { DarkModeButton } from "./DarkModeButton";
 import { useGlobalContext } from "../../../../Global";
 import AlertComponent from "../../../GenericComponents/Alerts/AlertComponent";
-import { AuthUseCase } from "../../../../DataLayer/UseCases/Authorization/AuthUseCase";
+import { AuthUseCase } from "../../../../DataLayer/UseCases/Aplications/Internal/Authorization/AuthUseCase";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import ContactsIcon from "@mui/icons-material/Contacts";
