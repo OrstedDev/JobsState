@@ -147,7 +147,7 @@ const JobsIndex = () => {
         return onlyToday ? isToday(parseISO(job.deadline?.trim() || "")) : true;
       })
       .filter((job) => {
-        return postulate ? job.state === 2 : true;
+        return postulate ? job.state === 3 : true;
       });
   };
 
@@ -213,8 +213,9 @@ const JobsIndex = () => {
             >
               <MenuItem value={0}>Disable</MenuItem>
               <MenuItem value={1}>Enable</MenuItem>
-              <MenuItem value={2}>Postulated</MenuItem>
-              <MenuItem value={3}>Closed</MenuItem>
+              <MenuItem value={2}>Active</MenuItem>
+              <MenuItem value={3}>Postulated</MenuItem>
+              <MenuItem value={4}>Closed</MenuItem>
             </Select>
           </FormControl>
         ),
