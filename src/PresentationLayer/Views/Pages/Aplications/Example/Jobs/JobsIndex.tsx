@@ -38,6 +38,7 @@ type TablaJobsEntity = {
   company?: string;
   description?: string;
   salary?: string;
+  date?: string;
   deadline?: string;
   link?: string;
   state: any;
@@ -192,6 +193,7 @@ const JobsIndex = () => {
           " \n\n " +
           Y?.education,
         salary: Y?.salary,
+        date: Y?.deadline ?? "",
         deadline: format(
           parse(Y?.deadline ?? "", "dd/MM/yyyy", new Date()),
           "yyyy/MM/dd"
@@ -380,8 +382,8 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
     {
       name: "FECHA",
       idName: "deadline",
-      selector: (row: TablaJobsEntity) => row?.deadline,
-      cell: (row: TablaJobsEntity) => <>{row?.deadline}</>,
+      selector: (row: TablaJobsEntity) => row?.date,
+      cell: (row: TablaJobsEntity) => <>{row?.date}</>,
       sortable: true,
       width: "100px",
     },
@@ -390,7 +392,7 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
       idName: "salary",
       selector: (row: TablaJobsEntity) => row?.salary,
       cell: (row: TablaJobsEntity) => <>{row?.salary}</>,
-      sortable: true,
+      // sortable: true,
       width: "100px",
     },
     {
