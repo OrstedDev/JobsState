@@ -30,7 +30,7 @@ const lightStyles: TableStyles = {
       paddingLeft: "8px",
       paddingRight: "8px",
       fontSize: "14px",
-      userSelect: 'text',
+      userSelect: "text",
     },
   },
 };
@@ -69,7 +69,7 @@ const darkStyles: TableStyles = {
       fontSize: "14px",
       backgroundColor: "#00072E",
       color: "#FFFFFF",
-      userSelect: 'text',
+      userSelect: "text",
     },
   },
 };
@@ -97,6 +97,10 @@ export default function GenDataTable(Props: any) {
   useEffect(() => {
     setDataTableLocal(Props.data);
   }, [Props.data]);
+
+  useEffect(() => {
+    setLote(Props?.rows ?? 10);
+  }, [Props?.rows]);
 
   const BuscarElemento = (e: any) => {
     e.preventDefault();

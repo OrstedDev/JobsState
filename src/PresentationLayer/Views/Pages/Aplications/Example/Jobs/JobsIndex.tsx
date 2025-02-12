@@ -423,7 +423,7 @@ const TableJobs = ({ dataRows }: { dataRows: Array<TablaJobsEntity> }) => {
     },
   ];
 
-  return <GenDataTable columns={columns} data={dataRows} />;
+  return <GenDataTable columns={columns} data={dataRows} rows={1000} />;
 };
 
 export default JobsIndex;
