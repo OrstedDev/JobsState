@@ -39,7 +39,7 @@ type TablaJobsEntity = {
   description?: string;
   salary?: string;
   date?: string;
-  deadline?: string;
+  deadline?: Date;
   link?: string;
   state: any;
 };
@@ -144,7 +144,9 @@ const JobsIndex = () => {
         return salary >= min;
       })
       .filter((job) => {
-        return onlyToday ? isToday(parseISO(job.deadline?.trim() || "")) : true;
+        return onlyToday
+          ? job.deadline == format(new Date(), "dd/MM/yyyy")
+          : true;
       })
       .filter((job) => {
         return postulate ? job.state === 3 : true;
@@ -194,10 +196,7 @@ const JobsIndex = () => {
           Y?.education,
         salary: Y?.salary,
         date: Y?.deadline ?? "",
-        deadline: format(
-          parse(Y?.deadline ?? "", "dd/MM/yyyy", new Date()),
-          "yyyy/MM/dd"
-        ),
+        deadline: parse(Y?.deadline ?? "", "dd/MM/yyyy", new Date()),
         link: Y?.link,
         state: (
           <FormControl sx={{ width: "100px" }} variant="standard">
