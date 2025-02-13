@@ -54,8 +54,10 @@ const JobsIndex = () => {
 
   const [minSalary, setMinSalary] = useState("");
   const [maxSalary, setMaxSalary] = useState("");
+  const [Actuales, setActuales] = useState(true);
   const [onlyToday, setOnlyToday] = useState(false);
   const [postulate, setPostulate] = useState(false);
+  const [active, setActive] = useState(false);
 
   //=======================================================================
   // DELETE
@@ -146,7 +148,6 @@ const JobsIndex = () => {
         const max =
           maxSalary !== "" ? parseInt(maxSalary ?? "99999", 10) : 99999;
 
-        console.log(min, max);
         return salary >= min && salary <= max;
       })
       .filter((job) => {
@@ -155,7 +156,15 @@ const JobsIndex = () => {
           : true;
       })
       .filter((job) => {
+        return Actuales
+          ? (job.deadline ?? new Date()) >= format(new Date(), "dd/MM/yyyy")
+          : true;
+      })
+      .filter((job) => {
         return postulate ? job.state === 3 : true;
+      })
+      .filter((job) => {
+        return active ? job.state === 2 : true;
       });
   };
 
@@ -169,7 +178,7 @@ const JobsIndex = () => {
       );
       LoadInDataTable(updatedJobs);
     }
-  }, [items, minSalary, maxSalary, onlyToday, postulate]);
+  }, [items, minSalary, maxSalary, onlyToday, postulate, Actuales, active]);
 
   //=======================================================================
   // CARGAR DATA TABLE INICIAL
@@ -286,12 +295,11 @@ const JobsIndex = () => {
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => setOnlyToday(!onlyToday)}
+            onClick={() => setActive(!active)}
             sx={{ height: "38px" }}
           >
-            {onlyToday ? "All" : "ONLY TODAY"}
+            {active ? "All" : "ACTIVES"}
           </Button>
-
           <Button
             variant="contained"
             color="secondary"
@@ -300,6 +308,24 @@ const JobsIndex = () => {
           >
             {postulate ? "All" : "POSTULATED"}
           </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setActuales(!Actuales)}
+            sx={{ height: "38px" }}
+          >
+            {Actuales ? "ALL" : "ACTUALS"}
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => setOnlyToday(!onlyToday)}
+            sx={{ height: "38px" }}
+          >
+            {onlyToday ? "All" : "ONLY TODAY"}
+          </Button>
+
           <Button
             variant="contained"
             color="secondary"

@@ -128,7 +128,6 @@ export async function deleteExpiredJobsFn(): Promise<boolean> {
       Crypt0.DC1pt0FromHex(Firma.usid) + GetGlobalCryptKeys("Jobs")
     );
 
-    // Obtener la fecha actual en formato "dd/MM/yyyy"
     const today = new Date();
     const todayFormatted = `${today.getDate().toString().padStart(2, "0")}/${(
       today.getMonth() + 1
@@ -136,8 +135,7 @@ export async function deleteExpiredJobsFn(): Promise<boolean> {
       .toString()
       .padStart(2, "0")}/${today.getFullYear()}`;
 
-    // Consultar los registros con deadline anterior a hoy
-    const q = query(collectionRef, where("state", "==", 1));
+    const q = query(collectionRef, where("state", "in", [0, 1]));
     const querySnapshot = await getDocs(q);
 
     const deletePromises: any = [];
